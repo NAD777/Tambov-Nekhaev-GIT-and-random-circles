@@ -4,20 +4,24 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
 from PyQt5.QtGui import QPixmap, QPen, QPainter, QColor, QPolygon, QBrush
 from PyQt5.QtCore import Qt, QPoint
 from random import randint
+from ui_file import Ui_Form
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, Ui_Form):
     def __init__(self):
         super(MainWindow, self).__init__()
-        uic.loadUi('design.ui', self)
+        self.setupUi(self)
         self.pushButton.clicked.connect(self.button_click)
         self.r = -1
         self.x, self.y = 0, 0
+        self.clckd = False
+        self.color = QColor(255, 255, 0)
 
     def button_click(self):
-        self.r = randint(40, 600)
+        self.r = randint(40, self.width() // 2)
         self.x = randint(10, self.width())
         self.y = randint(10, self.height())
+        self.color = QColor(randint(0, 255), randint(0, 255), randint(0, 255))
 
     def paintEvent(self, event):
         if self.r != -1:
@@ -28,7 +32,7 @@ class MainWindow(QMainWindow):
             qp.end()
 
     def drawC(self, qp):
-        qp.setBrush(QColor(255, 255, 0))
+        qp.setBrush(self.color)
         qp.drawEllipse(QPoint(self.x, self.y), self.r, self.r)
         self.update()
 
